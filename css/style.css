@@ -95,4 +95,11 @@ button { cursor: pointer; font-weight: bold; }
 .del-btn { background: transparent; color: #ff4444; width: auto; padding: 5px; font-size: 1.5rem; }
 
 /* QR */
-#qr-container img { margin: 0 auto; padding: 15px; background: white; border-radius: 10px; }
+#qr-container img {
+    margin: 0 auto;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 250px;
+}

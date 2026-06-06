@@ -60,17 +60,19 @@ function generateQR() {
     const container = document.getElementById("qr-container");
     container.innerHTML = "";
     
-    // Comprimeer data om te zorgen dat het in de QR past (alleen id's van spellen om grote data te voorkomen bij veel spellen, of de volledige JSON als het klein is)
-    // Voor stabiliteit zenden we de laatste 20 spellen.
-    const recentGames = gamesData.slice(-20); 
+    // Oplossing: Pak alleen de laatste 5 spellen. Dit is meer dan genoeg 
+    // voor een live-sync op een spelletjesavond en houdt de QR-code 'grof' en scanbaar.
+    const recentGames = gamesData.slice(-5); 
     const syncData = { p: playerNames, d: recentGames };
     const jsonString = JSON.stringify(syncData);
 
     qrCode = new QRCode(container, {
         text: jsonString,
-        width: 250, height: 250,
-        colorDark : "#121212", colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.L
+        width: 500, // Verhoogd voor scherpte
+        height: 500, // Verhoogd voor scherpte
+        colorDark : "#000000", // Zwart/wit heeft het allerbeste contrast voor de camera
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.M // 'M' geeft een betere balans tussen data en foutcorrectie
     });
     openModal('modal-show-qr');
 }
@@ -80,7 +82,11 @@ let html5QrcodeScanner = null;
 function openScanner() {
     openModal('modal-scan-qr');
     if(!html5QrcodeScanner) {
-        html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 250 });
+        html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { 
+            fps: 10, 
+            qrbox: { width: 220, height: 220 }, // Iets kleiner scangebied, dwingt focus af
+            aspectRatio: 1.0
+        });
     }
     html5QrcodeScanner.render(onScanSuccess, onScanError);
 }
